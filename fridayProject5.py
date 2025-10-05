@@ -22,7 +22,7 @@ conn.commit()
 # ---------- GUI Setup ----------
 root = tk.Tk()
 root.title("Customer Information Manager")
-root.geometry("800x600")
+root.geometry("1000x600")
 root.configure(bg="#f0f4f7")
 
 style = ttk.Style()
@@ -66,7 +66,7 @@ def submit():
     else:
         messagebox.showwarning("Missing Info", "Please fill out all fields.")
 
-tk.Button(root, text="Submit", command=submit, bg="#4caf50", fg="white", font=("Helvetica", 10, "bold")).pack(pady=10)
+tk.Button(root, text="Submit", command=submit, bg="#16b983", fg="white", font=("Helvetica", 10, "bold")).pack(pady=10)
 
 # ---------- Table Frame ----------
 table_frame = tk.Frame(root)
@@ -81,7 +81,7 @@ for col in columns:
     if col == "id":
         tree.column(col, width=50, anchor="center")  # Smaller width for ID
     else:
-        tree.column(col, width=100, anchor="w")
+        tree.column(col, width=120, anchor="w")
 
 def load_data():
     for row in tree.get_children():
@@ -96,6 +96,23 @@ def sort_column(col, reverse):
     for index, (val, k) in enumerate(data):
         tree.move(k, "", index)
     tree.heading(col, command=lambda: sort_column(col, not reverse))
+
+
+# ---- Hover Box ----
+
+def show_tooltip(event):
+    if not hasattr(tree, "tooltip") or tree.tooltip is None:
+        tree.tooltip = tk.Label(tree, text="Double-click to edit", bg="#c6ffc4", font=("Arial", 8), relief="solid", borderwidth=1)
+        tree.tooltip.place(x=event.x, y=event.y)
+
+def hide_tooltip(event):
+    if hasattr(tree, "tooltip") and tree.tooltip is not None:
+        tree.tooltip.destroy()
+        tree.tooltip = None
+
+tree.tooltip = None
+tree.bind("<Enter>", show_tooltip)
+tree.bind("<Leave>", hide_tooltip)
 
 # ---------- Edit on Double Click ----------
 def on_double_click(event):
@@ -123,7 +140,7 @@ def on_double_click(event):
         load_data()
         edit_window.destroy()
 
-    tk.Button(edit_window, text="Save", command=save_changes, bg="#2196f3", fg="white").pack(pady=20)
+    tk.Button(edit_window, text="Save", command=save_changes, bg="#558ffc", fg="white").pack(pady=20)
 
 tree.bind("<Double-1>", on_double_click)
 
